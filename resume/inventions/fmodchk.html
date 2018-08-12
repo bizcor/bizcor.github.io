@@ -1,0 +1,755 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<! $Id: fmodchk.html,v 1.2 2006/03/06 02:23:42 alban Exp $ >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>J. David Alban &lt;extasia@extasia.org&gt;</title>
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#batch_options">BATCH OPTIONS</a></li>
+	<li><a href="#other_options">OTHER OPTIONS</a></li>
+	<li><a href="#specifying_durations">SPECIFYING DURATIONS</a></li>
+	<li><a href="#specifying_files">SPECIFYING FILES</a></li>
+	<li><a href="#logging">LOGGING</a></li>
+	<li><a href="#using_a_configuration_file">USING A CONFIGURATION FILE</a></li>
+	<li><a href="#configuration_examples">CONFIGURATION EXAMPLES</a></li>
+	<li><a href="#invocation_examples">INVOCATION EXAMPLES</a></li>
+	<li><a href="#dependencies">DEPENDENCIES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>fmodchk - Generate alerts when file ages or file age differences
+satisfy user supplied criteria.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  usage: fmodchk [ options ] [ File ... ]
+    -r,--alerts-to Addr[,Addr[,...]]
+    -R,--trusted-alerts-to Addr[,Addr[,...]]
+    -c,--config-file ConfigFile
+    -d,--difference
+    -D,--signed-difference
+    -e,--errors-to Addr[,Addr[,...]]
+    -f,--mail-from Addr
+    -h,--help
+    -l,--label LabelList
+    -P,--alert-patrol
+    -t,--threshold [ComparisonOperator]DurationSpec
+    -T,--alert-comments Text
+    -w,--response-window DurationSpec</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>fmodchk generates alerts when a violation is detected, i.e., the age
+of a file (current time minus time of last modification) or the
+difference in age between two files satisfies an expression (violation
+criteria).  The expression is of one of these forms.</p>
+<pre>
+  FILE_AGE            OPERATOR AGE_OR_DURATION
+  FILE_AGE_DIFFERENCE OPERATOR AGE_OR_DURATION</pre>
+<p>where OPERATOR is a comparison operator (e.g., '&gt;') and
+AGE_OR_DURATION is a threshold specified by the user.  Both the
+operator and threshold value have defaults, for which, see the usage
+statement (execute:  fmodchk --help).</p>
+<p>To fmodchk, a file is anything with an inode, including directories.
+Symbolic links are followed.</p>
+<p>Examples of situations for which fmodchk might generate an alert:</p>
+<ul>
+<li>
+The directory /foo/bar was modified more than an hour ago
+<p></p>
+<li>
+The directory /foo/bar was modified less than an hour ago
+<p></p>
+<li>
+The difference in ages between file A and file B is less than 1 day
+<p></p>
+<li>
+File bat is older than file baz
+<p></p>
+<li>
+File bat is younger than file baz by more than two weeks
+<p></p>
+<li>
+The last file in a directory for response files is older than the last
+file in a directory for stimulus files, and we're out of the response
+window
+<p></p></ul>
+<p>
+</p>
+<hr />
+<h1><a name="batch_options">BATCH OPTIONS</a></h1>
+<p>Exactly one of the following options must be specified in batch mode
+(stdin not associated with a tty):</p>
+<p><strong>-r,--alerts-to Addr[,Addr[,...]]</strong></p>
+<p>Send alert notification emails to the given comma-delimited email
+address list.  Pathnames in the fmodchk-generated alert text will be
+basenames only.</p>
+<p><strong>-R,--trusted-alerts-to Addr[,Addr[,...]]</strong></p>
+<p>Same as --alerts-to except that full pathnames are used in the
+fmodchk-generated alert text.</p>
+<p>
+</p>
+<hr />
+<h1><a name="other_options">OTHER OPTIONS</a></h1>
+<p><strong>-c,--config-file ConfigFile</strong></p>
+<p>Get options from configuration file ConfigFile rather than from the
+command line.  --config-file is incompatible with all options except
+for --label.  Configfile must be a regular file and its size may not
+exceed a default maximum value (for which, see usage statement:
+fmodchk --help).</p>
+<p>See the <a
+href="#using_a_configuration_file"><strong>CONFIGURATION FILE</strong></a>
+section for details on the configuration file.</p>
+<p><strong>-d,--difference</strong></p>
+<p>Indicate the difference in ages between two files' is being
+examined.  (The default is to examine the age of each of a set of
+files.)  Requires two file arguments.  The absolute value of the age
+difference will be compared to a value given by the --threshold
+option or to a default if --threshold is not used.</p>
+<p><strong>-D,--signed-difference</strong></p>
+<p>Same as --difference except that a signed difference will be
+compared.  The order of the files on the command line is
+significant.  The difference will be calculated as the first file's
+age minus the second file's age.  <code>age(A)</code> - <code>age(B)</code> &gt; 0 will indicate
+that A is older than B, where A is given before B on the command
+line.  <code>age(A)</code> - <code>age(B)</code> &lt; 0 will indicate that A is younger than B.</p>
+<p><strong>-e,--errors-to Addr[,Addr[,...]]</strong></p>
+<p>Send runtime warnings/errors encountered by this program (not
+alerts), to the given comma-delimited email address list.  The
+default list to which errors are sent is in the usage statement
+(fmodchk --help).  This option is ignored when not in batch mode.</p>
+<p><strong>-f,--mail-from Addr</strong></p>
+<p>Use Addr as the value of the "From: " header in the alert email
+messages.  The default address to which errors are sent is in the
+usage statement (fmodchk --help).  This option is ignored when not
+in batch mode.</p>
+<p><strong>-h,--help</strong></p>
+<p>List usage.</p>
+<p><strong>-l,--label LabelList</strong></p>
+<p>Process only configuration file blocks named by comma-delimited
+LabelList.  The default is to process all configuration blocks that
+don't specify 'label-invocation-only'.</p>
+<p>This option may be used multiple times.  Requires use of
+--config-file option.  Incompatible with all other options.</p>
+<p>To specify a label that actually contains a comma, escape the comma
+using a backslash, e.g., '\,'.</p>
+<p><strong>-P,--alert-patrol</strong></p>
+<p>Indicate that the local bmc patrol is to be informed of alerts.</p>
+<p><strong>-t,--threshold [ComparisonOperator]DurationSpec</strong></p>
+<p>Specify DurationSpec and optionally ComparisonOperator for file age
+or age difference comparison.  See the usage statement (fmodchk
+--help) for a list of valid comparison operators.  See usage statement
+also for default values for DurationSpec and ComparisonOperators.</p>
+<p>Note that the condition specified in this option is the condition for
+which an alert will be sent.  It is not the steady-state,
+non-violation condition.</p>
+<p>This option is ignored if --response-window is used.</p>
+<p><strong>-T,--alert-comments Text</strong></p>
+<p>Append Text to the alert message.  Any backslash-n sequences ('\n')
+will be converted to newlines.</p>
+<p>It is strongly suggested that alert comments be used for all alerts. 
+Example configuration file snippet:</p>
+<pre>
+      alert-comments     &lt;&lt; EndComments
+          ***
+          The lack of a young enough archive file for this inbound Foo
+          archive directory may mean that we didn't receive a file on time
+          from Foo &amp; Associates.  Please investigate.
+          ***
+          EndComments</pre>
+<p>By default, the alert text contains only age or age difference data. 
+The alert comments are used to give context.</p>
+<p>NOTE:  Do not include information (such as full pathnames) in alert
+comments that you would not want sent in regular (untrusted) alert
+messages.</p>
+<p><strong>-w,--response-window DurationSpec</strong></p>
+<p>Indicate the duration of the response window whose start time is the
+time of last modification of a stimulus file.  Requires
+--signed-difference.  Implies the threshold '&gt;0'.  Duration spec must
+evaluate to a value greater than 0 seconds.</p>
+<p>
+</p>
+<hr />
+<h1><a name="specifying_durations">SPECIFYING DURATIONS</a></h1>
+<p>A duration specification is an indication of an amount of time, from a
+few seconds to a number of days, hours, minutes, and seconds.  Duration
+specifications are given using one of the following three forms:</p>
+<ul>
+<li>
+&lt;DAYS&gt;+HH:MM:SS
+<p>One or more days digits, a literal '+', and two each of hours,
+minutes, and seconds digits, separated by colons.  Example: 
+100+12:30:00</p>
+<p></p>
+<li>
+&lt;HOURS&gt;:MM:SS
+<p>One or more hours digits and two each of minutes and seconds digits
+separated by colons.  Example:  2:00:00</p>
+<p></p>
+<li>
+&lt;SECONDS&gt;
+<p>One or more seconds digits.  Example:  7200</p>
+<p></p></ul>
+<p>
+</p>
+<hr />
+<h1><a name="specifying_files">SPECIFYING FILES</a></h1>
+<p>A 'file' is considered by fmodchk to be anything that has an inode. 
+Files may be specified as pathnames or globs.  Each glob is expanded
+into a set of matching pathnames.  In addition, the following form
+may be used to specify a file:</p>
+<pre>
+  AGE_SELECTOR(GLOB)</pre>
+<p>GLOB is a file glob, and must be enclosed in parentheses as shown.
+AGE_SELECTOR may be one of the following, using any combination of
+uppercase and/or lowercase letters:</p>
+<pre>
+  { 'o', 'oldest', 'y', 'youngest' }</pre>
+<p>Each instance of the use of the age selectors 'oldest' and 'youngest'
+will cause a single pathname to be specified, which will be generated
+by expanding the glob and then choosing the oldest or youngest file,
+respectively.</p>
+<p>
+</p>
+<hr />
+<h1><a name="logging">LOGGING</a></h1>
+<p>fmodchk uses Log::Transcript, so all logging is done to stderr.
+Additionally a session transcript may be emailed under certain
+conditions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="using_a_configuration_file">USING A CONFIGURATION FILE</a></h1>
+<p>An fmodchk configuration file is a text file whose maximum size is
+given in the usage message (fmodchk --help).</p>
+<p>If an fmodchk command line contains the --config-file option, fmodchk
+will get all of its configuration information, including a list of
+checks to be performed, from the active configuration blocks in the
+named file.  If --config-file is not used, then the check specified
+on the command line will be performed.</p>
+<p>If both --config-file and --label are used, then only the active
+configuration blocks whose block names are identified by the given
+label list are used.  ("Label" is synonymous with "configuration
+block name".)  If --config-file is used without --label, all active
+configuration blocks in the configuration file are processed.</p>
+<p>A configuration file is logically a set of tasks to be performed by
+fmodchk.  These tasks contain the checks to be performed and other
+attributes of the task, e.g., to whom to email alerts.</p>
+<p>The configuration file is a text file in which apache-like blocks of
+configuration text are present.  A block has the form:</p>
+<pre>
+  &lt;blockname&gt;
+    .
+    .
+    .
+  &lt;/blockname&gt;</pre>
+<p>Blocks can be nested.</p>
+<p>Key-value statements occur in blocks.  A key value statement has the
+form:</p>
+<pre>
+  key&lt;whitespace&gt;value</pre>
+<p>The value may contain whitespace.  Everything after the whitespace that
+follows the key is considered to be the value for that key.</p>
+<p>Blocknames and keywords may be specified in either upper- or
+lowercase.  They will be lowercased when parsed.  The case of values,
+however, will not be modified.  For example, the following configuration
+snippet:</p>
+<pre>
+  &lt;fOO&gt;
+    Bar   This Is the Value For Bat
+    BAZ   MUMBLE mumble
+  &lt;/Foo</pre>
+<p>will be stored in memory as the following perl data structure:</p>
+<pre>
+  foo =&gt; {
+    bar =&gt; 'This Is the Value For Bat',
+    baz =&gt; 'MUMBLE mumble',
+  }</pre>
+<p>fmodchk requires that all configuration data in the file be enclosed in
+a top level block called "fmodchk":</p>
+<pre>
+  &lt;fmodchk&gt;
+    .
+    .
+    .
+  &lt;/fmodchk&gt;</pre>
+<p>Within this block may be zero or more "task" blocks, i.e., blocks that
+represent tasks, or checks that are to be performed.  The exception to
+this is the master suspend block.</p>
+<p>A task block consists of key-value statements and blocks from which
+argument vectors ("argv's"), or, arrays of options, are built.  The
+long form of the options described in the usage statement (minus the
+"--" prefixes) are used as key values in a task block.  In addition
+to these options, the keys "file" and "label-invocation-only" may be
+used in task blocks.</p>
+<p>The "file" key is used to specify a file, glob, or age selector.  See
+section <a href="#specifying_files"><strong>SPECIFYING
+FILES</strong></a> for more information about the values for
+the "file" keyword.</p>
+<p>The "file" keyword may appear multiple times to specify multiple files:</p>
+<pre>
+  file    /usr/local/foo
+  file    /usr/local/bar
+  file    /usr/local/bat
+  file    /usr/local/baz</pre>
+<p>So, what would be given on the command line as:</p>
+<pre>
+  $ fmodchk --alerts-to foo@bar.domain --threshold '&gt; 1+00:00:00' \
+            --alert-patrol --alert-text &quot;check job FOO&quot; '/tmp/junk*'</pre>
+<p>Would be specified as the following task block:</p>
+<pre>
+  &lt;my_block&gt;
+    alerts-to      foo@bar.domain
+    threshold      &gt; 1+00:00:00
+    alert-patrol   yes
+    alert-text     check job FOO
+    file           /tmp/junk*
+  &lt;/my_block&gt;</pre>
+<p>The 'label-invocation-only' key is a boolean key used in a task block
+to indicate that the block may be considered for processing (if it is
+active) only if specified on the command line in the LabelList option
+argument to the --label option.  If the --label option is not used,
+the block will not be processed.  If the --label option is used, but
+the block's name is not in the given label list, the block will not
+be processed.  Configuration blocks without this boolean key (or with a
+false value for it) represent tasks which can be performed at any time.
+That is, they are not time sensitive tasks.  Tasks which are
+label-invocation-only tasks are time sensitive, and this boolean key is
+used to make sure they are only processed when explicitly called.</p>
+<p>Note that values for boolean options (e.g., "difference", or
+"signed-difference") may the following boolean values:</p>
+<pre>
+  true   false
+  1      0
+  yes    no
+  on     off</pre>
+<p>NOTE:  If a boolean key is given without a value, e.g.:</p>
+<pre>
+  &lt;my_block&gt;
+    .
+    .
+    .
+    alert-patrol
+    .
+    .
+    .
+  &lt;my_block&gt;</pre>
+<p>a true value will be assigned to it.  Using the example block above,
+Patrol would be alerted.</p>
+<p><strong>Suspend blocks</strong></p>
+<p>fmodchk processes only active configuration blocks.  A block is
+active (vs. suspended) if one of the following is true:</p>
+<ul>
+<li>
+It does not contain a suspend block
+<p></p>
+<li>
+It contains a suspend block, but the current time is not in the
+interval indicated in the suspend block
+<p></p></ul>
+<p>Suspend blocks are used to toggle the active / inactive status of
+either the entire configuration file or of selected blocks.  When a
+suspend block contains an active suspend interval, its enclosing
+block is inactive (suspended), i.e., not considered for processing.</p>
+<p>A suspend block may occur in the top level "fmodchk" block (the
+master suspend block), or in any task block.  It has the form:</p>
+<pre>
+  &lt;suspend&gt;
+    from  TIMESPEC
+    to    TIMESPEC
+  &lt;/suspend&gt;</pre>
+<p>where TIMESPEC is a string which represents a date and time.  fmodchk
+parses a TIMESPEC by first removing all non-digit characters and then
+calling Date::Manip::ParseDate.  The following are valid fmodchk
+TIMESPEC formats:</p>
+<pre>
+            YYYYMMDDHHMMSS
+            YYYYMMDDHHMM
+            YYYYMMDDHH
+            YYYYMMDD
+            YYYYMM
+            YYYY</pre>
+<p>Any TIMESPEC that collapses into one of these forms when all
+non-digit characters are removed, may be used.</p>
+<p>At least one of the keys "to" and "from" must be specified.  If both
+are specified, the date and time represented by "to" must be later
+than the date and time represented by "from".</p>
+<p>A suspend block defines a time interval in the local time zone.  If
+the current time falls in that interval, the interval is said to be
+active.  And when a suspend interval is active, its enclosing block is
+inactive (suspended) and is not considered for processing.</p>
+<p>When both keys are given, the interval starts at the "from" time and
+ends at the "to" time.  When only "from" is given, the interval
+starts at the "from" time and has no end.  When only "to" is given,
+the interval ends at the "to" time but has no beginning.  For example:</p>
+<pre>
+  &lt;suspend&gt;
+    from  20050701
+    to    2006 01 01
+  &lt;/suspend&gt;</pre>
+<p>specifies a time interval beginning July 1, 2005 at 0:00 local time
+and ends January 1, 2006 at 0:00.</p>
+<pre>
+  &lt;suspend&gt;
+    from  2004-03-05 18:45:00
+  &lt;/suspend&gt;</pre>
+<p>specifies an interval beginning March 5, 2004 at 6:45 pm local time
+but having no end.</p>
+<pre>
+  &lt;suspend&gt;
+    to    2004/03/05 18.45.00
+  &lt;/suspend&gt;</pre>
+<p>specifies an interval ending March 5, 2004 at 6:45 pm local time but
+having no beginning.</p>
+<p>A suspend block, like any text in the configuration can be commented
+out, or have individual fields commented out.</p>
+<p><strong>Comments and ignored fields</strong></p>
+<p>Throughout this documentation, language such as "the configuration
+file contains [something]" is usually used to mean that it contains
+[something] and the <code>line(s)</code> that contain [something] are not
+commented out.</p>
+<p>Config::General, which parses the configuration file, recognizes
+comments as existing from a pound sign (#) to the end of the line. 
+It also recognizes C-style comments ( /* */ ).  If a pound sign is
+required in a value, it can be escaped with a backslash.  Pound signs
+don't need to be escaped in here documents.</p>
+<p>Anything commented out as mentioned above will not become part of any
+data structure resulting from parsing the configuration file.  That is,
+fmodchk will not be aware of its existence.</p>
+<p>There are two names that will become part of parsed configuration
+data structures, but will be ignored by fmodchk.  fmodchk will ignore
+any key-value statement whose key is "comment" or "comments" and will
+ignore any "comment" or "comments" blocks.  These key-value
+statements and blocks will become a part of the configuration data
+(unlike the comments in the file using # and /* */, which are ignored
+by the parser).  The value in this is that information can be
+included in the configuration blocks themselves which will be logged
+when the block is logged.</p>
+<p><strong>Line continuation</strong></p>
+<p>Lines may be continued by quoting the newline with a backslash.  Using:</p>
+<pre>
+  mykey foo \
+          bar \
+          bat \
+          baz \
+          mumble</pre>
+<p>the value for mykey will become "foo bar bat baz mumble".</p>
+<p><strong>Here documents</strong></p>
+<p>Using:</p>
+<pre>
+  mykey &lt;&lt;EOD
+      line 1
+      line 2</pre>
+<pre>
+      line 4
+    EOD</pre>
+<p>the value for mykey will become:</p>
+<pre>
+  line 1
+  line 2</pre>
+<pre>
+  line 4</pre>
+<p>An amount of whitespace equal to that occuring before the delimiter
+("EOD") will be removed from each line in the here doc.</p>
+<p>
+</p>
+<hr />
+<h1><a name="configuration_examples">CONFIGURATION EXAMPLES</a></h1>
+<p><strong>Suspend blocks</strong></p>
+<p>(One suspend block per containing block.)</p>
+<pre>
+     &lt;suspend&gt;
+       from   2005-07-01 18:00
+       to     2005.07.02 00.00
+     &lt;/suspend&gt;</pre>
+<pre>
+     &lt;suspend&gt;
+       from   2006
+     &lt;/suspend&gt;</pre>
+<pre>
+     &lt;suspend&gt;
+       to     2006/02/28
+     &lt;/suspend&gt;</pre>
+<p><strong>label-invocation-only</strong></p>
+<pre>
+     label-invocation-only
+     label-invocation-only  yes
+     label-invocation-only  1
+     label-invocation-only  true</pre>
+<p><strong>-r,--alerts-to</strong></p>
+<pre>
+     alerts-to  foo@bar.domain,some-list@bork.domain,root@gleep.domain</pre>
+<p><strong>-R,--trusted-alerts-to</strong></p>
+<pre>
+     trusted-alerts-to  baz@bat.domain,admin@bloop.domain,user37@localhost</pre>
+<p><strong>-d,--difference</strong></p>
+<pre>
+     difference
+     difference  yes
+     difference  1
+     difference  true</pre>
+<p><strong>-D,--signed-difference</strong></p>
+<p>Any of:</p>
+<pre>
+     signed-difference
+     signed-difference  yes
+     signed-difference  1
+     signed-difference  true</pre>
+<p><strong>-e,--errors-to</strong></p>
+<pre>
+     errors-to  mumble@mumble.domain,error-folks@fnerp.domain</pre>
+<p><strong>-f,--mail-from</strong></p>
+<pre>
+     mail-from  fmodchk@my.domain</pre>
+<p><strong>-P,--alert-patrol</strong></p>
+<pre>
+     alert-patrol
+     alert-patrol  yes
+     alert-patrol  1
+     alert-patrol  true</pre>
+<p><strong>-t,--threshold</strong></p>
+<p>Whitespace between operator and value O.K. but not required.</p>
+<pre>
+     threshold          ==0
+     threshold          &lt;=600
+     threshold          &lt;= 8640000
+     threshold          &gt;  30+00:00:00
+     threshold          &gt;= 240:00:00</pre>
+<p><strong>-T,--alert-comments</strong></p>
+<pre>
+     alert-comments     &lt;&lt; EndComments
+         ***
+         The lack of a young enough archive file for this inbound Foo
+         archive directory may mean that we didn't receive a file on time
+         from Foo &amp; Associates.  Please investigate.
+         ***
+         EndComments</pre>
+<p><strong>file arguments</strong></p>
+<pre>
+     file               /some/path/*foo*
+     file               /some/other/path/bar.{c,h}
+     file               /usr/local/bat
+     file               /
+     file               oldest(/partners/foo/archive/*)
+     file               youngest(/partners/widgets_inc/archive/*)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="invocation_examples">INVOCATION EXAMPLES</a></h1>
+<p>There are five kinds of tests identified currently which can be
+implemented using fmodchk:</p>
+<ul>
+<li>
+Age check
+<p></p>
+<li>
+Recent modification check
+<p></p>
+<li>
+Unsigned difference check
+<p></p>
+<li>
+Signed difference check
+<p></p>
+<li>
+Stimulus-response check
+<p></p></ul>
+<p><strong>Age check</strong></p>
+<p>In this example, we want to send a trusted alert (full pathname
+information included) to foo@bar.domain if directory /usr/local is less
+than sixty days old.  We want the email to appear to come from
+&lt;bat@baz.domain&gt;, rather than the default address (for which see usage
+statement: fmodchk --help).  We want BMC Patrol to be made aware
+of any alerts.  We'd like the recipients of the alert to contact the
+help desk at (555)-555-5555.  Rather than having runtime error
+transcripts emailed to the default email <code>address(es)</code> (for which, see
+usage statement), we want error transcripts to be sent to
+&lt;thomas.tallis@motets.domain&gt;.</p>
+<p>We could use the following invocation in a crontab entry (must be all
+on one line in the crontab; broken across multiple lines here only
+for readability):</p>
+<pre>
+  /FULL/PATH/TO/fmodchk                                           \
+    --trusted-alerts-to foo@bar.domain                            \
+    --errors-to thomas.tallis@motets.domain                       \
+    --mail-from bat@baz.domain                                    \
+    --alert-patrol                                                \
+    --alert-comments 'Please contact help desk at (555) 555-5555' \
+    --threshold '&lt; 60+00:00:00'                                   \
+    /usr/local</pre>
+<p>Alternatively, we could specify a configuration file in the invocation:</p>
+<pre>
+  /FULL/PATH/TO/fmodchk --config-file /PATH/TO/fmodchk.conf</pre>
+<p>and include the following block in fmodchk.conf:</p>
+<pre>
+  &lt;usr-local-age-check&gt;
+    trusted-alerts-to  foo@bar.domain
+    errors-to          thomas.tallis@motets.domain
+    mail-from          bat@baz.domain
+    alert-patrol       yes
+    alert-comments     Please contact help desk at (555) 555-5555
+    threshold          &lt; 60+00:00:00
+    file               /usr/local
+  &lt;/usr-local-age-check&gt;</pre>
+<p>The name you use for the block can be any identifier.  It is recommended
+that you use something descriptive and unique to the task.</p>
+<p><strong>Recent modification check</strong></p>
+<p>In this example, we want to send an untrusted alert to mumble@bar.domain if
+the youngest file in directory /data/flows/foo_associates/inbound/archive
+is over two hours old.  In this case, we want fmodchk to execute only
+a single time sensitive task, and only at a certain time.  Therefore,
+in the invocation, we direct fmodchk to use only one block in a
+configuration file:</p>
+<pre>
+  /FULL/PATH/TO/fmodchk                                        \
+    --config-file /some/directory/fmodchk.configuration        \
+    --label foo-associates-inbound-archive-recent-modification</pre>
+<p>In /some/directory/fmodchk.configuration, we then have:</p>
+<pre>
+  &lt;foo-associates-inbound-archive-recent-modification&gt;
+    label-invocation-only
+    alerts-to              mumble@bar.domain
+    threshold              &gt; 2:00:00
+    alert-comments &lt;&lt;EndOfAlertComments
+       We haven't archived an inbound file from Foo &amp; Associates
+       for over two hours.  Please investigate.
+       EndOfAlertComments
+    file    youngest(/data/flows/foo_associates/inbound/archive/*)
+  &lt;/foo-associates-inbound-archive-recent-modification&gt;</pre>
+<p>Note that because of the inclusion of the label-invocation-only key in
+the block, this block will ever be executed only if its name is in a
+label list given with the --label option.</p>
+<p>Note that label-invocation-only was not given a value.  When this
+happens for a boolean key, the value is taken to be true.</p>
+<p><strong>Unsigned difference check</strong></p>
+<p>Send a trusted alert to william.byrd@composers.domain if the absolute
+value of the age difference between directory / and directory /etc is
+less than or equal to three and a half days.  Cron entry:</p>
+<pre>
+  /FULL/PATH/TO/fmodchk                               \
+    --trusted-alerts-to william.byrd@composers.domain \
+    --difference                                      \
+    --threshold '&lt;= 3+12:00:00'                       \
+    '{/,/etc}'</pre>
+<p>Note that on this particular invocation, we arbitrarily chose to use a
+file glob (using curly brace expansion) to specify the directories.  We
+could just as easily have listed the directories individually:</p>
+<pre>
+  / /etc</pre>
+<p>Alternatively, here is a configuration block that defines the same task:</p>
+<pre>
+  &lt;root-etc-unsigned-difference&gt;
+    trusted-alerts-to william.byrd@composers.domain
+    difference
+    threshold         &lt;= 3+12:00:00
+    file              {/,/etc}
+  &lt;root-etc-unsigned-difference&gt;</pre>
+<p><strong>Signed difference check</strong></p>
+<p>Send a trusted alert to unreliable.pager@archpageless.domain if
+/etc/foo.config is older than /etc/bar.config by more then ten seconds.</p>
+<pre>
+  /FULL/PATH/TO/fmodchk                                      \
+    --trusted-alerts-to unreliable.pager@archpageless.domain \
+    --signed-difference                                      \
+    --threshold '&gt; 10'                                       \
+    '/etc/{foo,bar}.config'</pre>
+<p>Again, we arbitrarily chose to use brace expansion rather than list
+both files separately.</p>
+<p>Alternatively, here is a configuration block that defines the same task:</p>
+<pre>
+  &lt;etc-foo-bar-config-signed-difference&gt;
+    trusted-alerts-to  unreliable.pager@archpageless.domain
+    signed-difference
+    threshold          &gt; 10
+    file               /etc/{foo,bar}.config
+  &lt;/etc-foo-bar-config-signed-difference&gt;</pre>
+<p><strong>Stimulus-response check</strong></p>
+<p>Assume that whenever we send Squidly Sushi &amp; Bait a *.bait file, we
+expect a *.switch file in response within eighteen hours.  Assume we
+have separate inbound and outbound archive directories for Squidly
+files.  Then we will detect that Squidly has not sent a response that
+meets our time requirements when both of the following are true:</p>
+<ul>
+<li>
+The current time is more than eighteen hours after the latest
+(youngest) file in the outbound archive was last modified
+<p></p>
+<li>
+The youngest inbound (response) file is older (its age is greater) than the
+youngest outbound (stimulus) file
+<p></p></ul>
+<p>Here is a cron invocation that would accomplish this:</p>
+<pre>
+  /FULL/PATH/TO/fmodchk                                         \
+    --trusted-alerts-to squidly-monitors@bait.and.switch.domain \
+    --signed-difference                                         \
+    --response-window 18:00:00                                  \
+    youngest(/data/flows/squidly/outbound/archive/*.bait)       \
+    youngest(/data/flows/squidly/inbound/archive/*.switch)</pre>
+<p>Note that --threshold is not used (and it is ignored if given).  The
+threshold used when --response-window is given is '&lt;0'.  When doing a
+stimulus-response check, list the stimulus file first and the response
+file second.  That is, detect a violation if the signed difference:</p>
+<pre>
+  age( stimulus file ) - age( response file ) &lt; 0</pre>
+<p>Alternatively, here is a configuration block that defines the same task:</p>
+<pre>
+  &lt;squidly-bait-switch-stimulus-response&gt;
+    trusted-alerts-to  squidly-monitors@bait.and.switch.domain
+    signed-difference
+    response-window    18:00:00
+    file  youngest(/data/flows/squidly/outbound/archive/*.bait)
+    file  youngest(/data/flows/squidly/inbound/archive/*.switch)
+  &lt;/squidly-bait-switch-stimulus-response&gt;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="dependencies">DEPENDENCIES</a></h1>
+<p>The following are modules used by fmodchk that are not in the standard
+Perl distribution:</p>
+<p>Available at &lt;http://www.cpan.org&gt;:</p>
+<pre>
+  Config::General
+  Date::Manip
+  File::Glob
+  Mail::Sendmail</pre>
+
+<p>Developed by author:
+<pre>
+  Log::Transcript</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>See documentation for the modules listed in the
+<a href="#dependencies"><strong>DEPENDENCIES</strong></a>
+section.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>David Alban
+</p>
+
+</body>
+
+</html>

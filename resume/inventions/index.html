@@ -1,0 +1,1043 @@
+<html>
+<! $Id: index.html,v 1.14 2006/03/06 02:23:09 alban Exp $ >
+<body vlink="#009966"
+      alink="#CC33FF">
+<head>
+<title>J. David Alban, Inventions</title>
+</head>
+<font size=+2><b>J. David Alban</b></font>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&#8226;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="/resume/">http://extasia.org/resume/</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&#8226;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="mailto:extasia@extasia.org">extasia@extasia.org</a>
+
+<h2>Inventions</h2>
+
+<p><b>Brief descriptions of many of my programs.&nbsp;&nbsp;Most
+will operate on Linux and most UNIX platforms.</b>
+
+<p>
+<table>
+  <tr>
+    <td valign=top><b>add, localtime, seconds, sub, tc,
+    timeadd&nbsp;&nbsp;</b></td> 
+    <td valign=top>
+      <table>
+        <tr>
+          <td valign=top><b>add&nbsp;&nbsp;</b></td>
+          <td valign=top>Takes two wall clock times as arguments and
+          prints to stdout the (wall clock time) sum of the
+          times 
+          </td>
+        </tr>
+        <tr>
+          <td valign=top><b>localtime&nbsp;&nbsp;</b></td>
+          <td valign=top>Takes an integer argument which represents
+          seconds since epoch and prints to stdout date string
+          (similar to the output of the <code>date(1)</code> command
+          when invoked with no arguments
+          </td>
+        </tr>
+        <tr>
+          <td valign=top><b>seconds&nbsp;&nbsp;</b></td>
+          <td valign=top>Takes string arguments similar to the output of
+          <code>date(1)</code> and prints to stdout the number of
+          seconds since epoch represented by the arguments
+          </td>
+        </tr>
+        <tr>
+          <td valign=top><b>sub&nbsp;&nbsp;</b></td>
+          <td valign=top>("<b><i>subtract</i></b>") Takes two wall
+          clock arguments and prints to stdout their difference
+          </td>
+        </tr>
+        <tr>
+          <td valign=top><b>tc&nbsp;&nbsp;</b></td>
+          <td valign=top>("<b><i>time calculator</i></b>") An
+          interactive (wall clock) time calculator that works in a
+          similar manner to <code>bc(1)</code> 
+          </td>
+        </tr>
+        <tr>
+          <td valign=top><b>timeadd&nbsp;&nbsp;</b></td>
+          <td valign=top>Takes a time in a form similar to the output
+          of date(1) and also an operator, a value, and a unit
+          specification.  If the operator is plus, the program adds
+          &lt;value&gt; &lt;units&gt; to &lt;time&gt;.  If the
+          operator is a minus, the program subtracts &lt;value&gt;
+          &lt;units&gt; from &lt;time&gt;.  The resulting time (also
+          in a format similar to <code>date(1)</code> output) is
+          printed on stdout.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>atif&nbsp;&nbsp;</b></td>
+    <td valign=top>(<b><i>"at interface"</i></b>) A front end to the
+    <code>at(1)</code> command.  An editing session is launched
+    containing a template that allows the user to create at jobs that
+    email reminders.  The user fills in the template, which is a
+    shell script containing a series of at commands.  The user can
+    then edit, cat, or run this script, execute a shell command, list
+    current at jobs, delete at jobs, and view at jobs.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>atsummary&nbsp;&nbsp;</b></td>
+    <td valign=top>Prints a summary of the commands in all pending
+    <code>at(1)</code> jobs owned by the caller
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>autopurgetmp&nbsp;&nbsp;</b></td>
+    <td valign=top>An <code>init.d/</code> script.  When run in an
+    IRIX machine's startup sequence, it deletes all files and
+    directories in /tmp, depending on the value of certain flag as
+    reported by IRIX's <code>chkconfig(1)</code> command.  When run
+    in an IRIX machine's shutdown sequence it sets or unsets a
+    certain chkconfig flag, depending on conditions on the system.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>bkp_atsummary&nbsp;&nbsp;</b></td>
+    <td valign=top>Captures the stdout of atsummary to create a snapshot
+    of pending <code>at(1)</code> jobs
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>bkpinbox&nbsp;&nbsp;</b></td>
+    <td valign=top>("<i><b>backup inbox</i></b>") Creates a
+    round-robin set of compressed copies of a user's mail spool in
+    user (disk) space.  The frequency at which these copies are made
+    depends on cron tab entries, but is suggested to be once an hour.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>catb&nbsp;&nbsp;</b></td>
+    <td valign=top>(<i>named after "<b>cat -b</b></i>") Like <code>cat(1)</code>, only each non-printable
+    character is printed as a backslash followed by a three digit
+    octal number (leading zeroes inserted as necessary) which
+    represents the ascii number for that character.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>cdir&nbsp;&nbsp;</b></td>
+    <td valign=top>("<i><b>change directory</i></b>") A program which
+    prints change directory commands to stdout based on a selection
+    from a menu displayed to the user.  It's stdout is meant to be
+    <code>eval</code>'d by another shell.  
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>cfind&nbsp;&nbsp;</b></td>
+    <td valign=top>("<i><b>command find</i></b>") Determines a
+    command's path given the command name.  Searches a comprehensive
+    list of directories in which executable files are typically found.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>check&nbsp;&nbsp;</b></td>
+    <td valign=top>Lists information on *,v archive files in the
+    current file tree
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>chkconfig&nbsp;&nbsp;</b></td>
+    <td valign=top>("<i><b>check configuration</i></b>") Mimics the
+    functionality of IRIX's <code>chkconfig(1)</code> command.
+    Written for systems that don't implement <code>chkconfig</code>.
+    </td>
+  </tr>
+  <tr>
+    <td
+    valign=top><b>chkdsk, chkdskunreg, mkchkdsktabentries,
+    showchkdskdbm&nbsp;&nbsp;</b>
+    </td> 
+    <td valign=top>This is a suite of programs that monitors non-raid
+    scsi disks on an IRIX system and reports problems with any of
+    them.  The disks do not have to have mounted filesystems or
+    active partitions.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>chkptfile&nbsp;&nbsp;</b></td>
+    <td valign=top>("<i><b>checkpoint file</i></b>") Makes a copy of a
+    file.  All attributes (except for ctime :-) of the
+    original file are preserved in the copy.  Additionally, the name of
+    the copy is the name of the original plus a suffix in the form of
+    ".yyyymmdd.hhmmss" which represents the mtime of the original
+    file.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>chkstate&nbsp;&nbsp;</b></td>
+    <td valign=top>Given a string that identifies a command, and a
+    pathname for a file that contains commands and command identifier
+    strings, execute the command and return a boolean indicating the
+    status of executing the command.  Useful in cron jobs:  e.g.:<br>
+    &nbsp;&nbsp;chkstate --command checkmount --file commands-file &&
+    do_something_else
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>compress_whitespace_lines.c&nbsp;&nbsp;</b></td>
+    <td valign=top>Converts all sets of consecutive "null lines" to a
+    single null line on stdout where null lines are lines with no
+    characters or lines consisting entirely of whitespace
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>construct_var_defns&nbsp;&nbsp;</b></td>
+    <td valign=top>Prints environment variable definitions to stdout
+    based on a given configuration file.  Does this in several forms,
+    including two that can be <code>eval</code>'d respectively by
+    <code>sh</code>-type shells and <code>csh</code>-type shells. 
+    The configuration file contains a host list for each variable to
+    be defined.  Invocation arguments can specify which variable
+    definitions to print and for which hosts or contexts.  
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>contrast&nbsp;&nbsp;</b></td>
+    <td valign=top>Determines the contrast (a real number) of two rgb
+    colors given their hexadecimal rgb representations.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>cronalert&nbsp;&nbsp;</b></td>
+    <td valign=top>Program to log and send an alert if cron is not
+    functioning properly for a user.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>cronsnap&nbsp;&nbsp;</b></td>
+    <td valign=top>Checks to see, using md5 checksums, whether a backup
+    of the current crontab exists.  If it doesn't, one is made.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>ctab&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>crontab updater/lister</i></b>") Aids users
+    in creating and modifying crontabs.  Locks a crontab using the same
+    method employed by <b>grab</b> (which see).  So only one process at a time
+    can edit/modify the crontab.  This is useful for sysadmins who
+    need to update system crontabs.  Also, snapshots are made in the
+    <code>$HOME</code> directory of the caller.  These are the
+    previous (before user makes changes) and current (after user
+    changes) forms of the user's crontab.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>dateincr&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>date increment</i></b>") Changes the system
+    clock forward or backward the given number of seconds.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>delpwent&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>delete passwd entry</i></b>") Deletes an
+    entry from /etc/passwd, identified by the arguments given
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>directories.lib.ksh&nbsp;&nbsp;</b></td>
+    <td valign=top>ksh/bash/posix sh shell function library containing
+    shell functions dealing with directories
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b><a href="../../code/dmtools/">dmlocate, dmupdatedb,
+    gendmlocdb, genudmldb.c</a>&nbsp;&nbsp;</b>
+    </td> 
+    <td valign=top>This is a suite of programs for IRIX and Unicos. 
+    It imitates the functionality of gnu's fast find utilities
+    (<code>locate</code> and <code>updatedb</code>), but supplies
+    additional functionality useful with SGI/Cray DMF filesystem.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>dsed&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>destructive sed</i></b>") Operates on
+    files named as arguments.  Takes a <code>sed(1)</code> operation
+    or set thereof and applies to the files.  That is, the changes
+    are written to the files, and not just sent to stdout as they are
+    with <code>sed</code>.  
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b><a
+      href="../../code/duchk/">duchk</a>&nbsp;&nbsp;</b></td> <td valign=top>("<b><i>disk usage check</i></b>")
+      Examines a single directory or an entire directory tree (but
+      will not cross filesystem boundaries) and lists files and
+      their sizes in kbytes.  Sorts in descending size order. 
+      Whitespace, shell metacharacters, and non-printable ascii
+      characters in file names are handled correctly.  Non-printable
+      characters in file names are represented by octal escapes in
+      output.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>duration&nbsp;&nbsp;</b></td>
+    <td valign=top>Takes an even number of wall clock time arguments and
+    computes:
+    <pre>
+    t2 - t1  +  t4 - t3  +  t6 - t5  +  ...  +  tN - tN-1</pre>
+    Each odd numbered time is the start of a duration.  Each even
+    numbered time is a temporary stop time of the duration, followed
+    by another start time.  The last time, is of course the final end
+    time of the duration.  Given all of the start times and stop
+    times, duration prints to stdout the amount of time of the
+    complete duration.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>dvinfo&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>disk volume info</i></b>") On IRIX
+    machines, prints out disk partition info for all scsi disks.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>emptydir&nbsp;&nbsp;</b></td>
+    <td valign=top>Shell utility to determine whether a directory is
+    empty of non-hidden files
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>fakedd&nbsp;&nbsp;</b></td>
+    <td valign=top>Mimics the functionality of dd; wrote for
+    a colleague for whom dd(1) wasn't functioning correctly at the
+    target end of a network pipe
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>fileops.lib.ksh&nbsp;&nbsp;</b></td>
+    <td valign=top>ksh/bash/posix sh shell function library containing
+    shell functions dealing with files and operations on them
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>finds&nbsp;&nbsp;</b></td>
+    <td valign=top>like find(1) except that it lists pathnames that have
+    been modified within a given number of seconds (rather than days)
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b><a
+      href="./fmodchk.html">fmodchk</a>&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>file modification check</i></b>")
+      Generate alerts when file ages or file age differences satisfy
+      user supplied criteria
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>fscapck&nbsp;&nbsp;</b></td>
+    <td valign=top>Logs and sends alerts when filesystem reach
+    threshold capacities
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>gbiff&nbsp;&nbsp;</b></td>
+    <td valign=top>Makes an ssh connection in the background to bring up
+    xbiff from a remote host
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>generate_bkp_file_list&nbsp;&nbsp;</b></td>
+    <td valign=top>Prints to stdout a list of files which are to be
+    selected for backup
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>genmuttcfg&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>generate mutt configuration</i></b>")
+    Generates on stdout <code>mutt</code> alias, save-hook, and
+    fcc-hook information for the given file.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>gpgedit&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>gnu privacy guard edit</i></b>") Decrypts a
+    PGP encrypted file (user must supply passphrase) to a temporary
+    file (with no group or world access).  Invokes an editor on the
+    temporary file.  Commits or does not commit changes after
+    prompting user.  
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>grab, grabinit, steal&nbsp;&nbsp;</b></td>
+    <td valign=top>
+      <table>
+        <tr>
+          <td valign=top><b>grab&nbsp;&nbsp;</b></td>
+          <td valign=top>A front end to an editor of the user's choice.
+          Creates a lock file in a dedicated temporary directory.
+          The first process to lock a file gets to edit it.  All
+          processes that try to edit a locked file get a full ls listing
+          of the lock file (showing the owner, who is the user locking
+          the file).  This was useful years ago before I started using
+          vim to edit files.
+          </td>
+        </tr>
+        <tr>
+          <td valign=top><b>grabinit&nbsp;&nbsp;</b></td>
+          <td valign=top>("<b><i>grab initialize</i></b>") Executed in a
+          machines startup sequence for system installs, and by a user's
+          <code>.login</code>, <code>.profile</code>, or other shell
+          rc file when a user logs in.  Initializes the lock
+          directory used by grab.  
+          </td>
+        </tr>
+        <tr>
+          <td valign=top><b>steal&nbsp;&nbsp;</b></td>
+          <td valign=top>Goes through lock directory and facilitates
+          easy "stealing", i.e., deleting lock files, of locked files.
+          A user can only steal files if they have sufficient privilege.
+          Used when the user knows that the locked file shouldn't be
+          locked.
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>greplog&nbsp;&nbsp;</b></td>
+    <td valign=top>Prints to stdout portions of log files, based on
+    given time ranges
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>hcmd&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>host command</i></b>") Executes its arguments
+    as shell commands on a list of remote hosts.  The set of hosts is
+    determined by <code>$0</code>.  Each value of <code>$0</code>
+    (different values made possible by symbolic links) corresponds to
+    a different environment variable which contains a whitespace
+    delimited list of hostnames.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>html_sanitize&nbsp;&nbsp;</b></td>
+    <td valign=top>Filters input, replacing html metacharacters with the
+    form of those characters beginning with an ampersand and ending with
+    a semicolon.  For use when the metacharacters should be interpreted
+    literally, and not as metacharacters.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>incycle&nbsp;&nbsp;</b></td>
+    <td valign=top>Given cycle (e.g., "every two weeks") and a live date
+    in that cycle, determines whether today's date (or different given
+    date) falls in that cycle.  Useful for cron jobs.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>jpeg-date-rename&nbsp;&nbsp;</b></td>
+    <td valign=top>Renames jpeg files to include a timestamp
+    representing their mtimes
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>lmrep&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>log message repeated</i></b>") Replaces
+    duplicate log message lines with the single line "last message
+    repeated n times"
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>loadmail&nbsp;&nbsp;</b></td>
+    <td valign=top>Reads messages from an mbox style mail box into
+    memory.  Can be used as the basis for other functionality.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>locate, updatedb&nbsp;&nbsp;</b></td>
+    <td valign=top>My own shell implementation of gnu's fast
+    find utilities.  Useful on systems which do not have gnu locate or
+    on those on which I can't install it.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>lock&nbsp;&nbsp;</b></td>
+    <td valign=top>Locks an <code>xterm</code> window (not an X11
+    session) with a password.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>lock_with_stats&nbsp;&nbsp;</b></td>
+    <td valign=top>Calls an X11 screensaver and records to a log
+    the time the display was locked and unlocked
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>log.lib.ksh&nbsp;&nbsp;</b></td>
+    <td valign=top>ksh/bash/posix sh shell function library containing
+    shell functions dealing with logging infrastructure
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b><a
+    href="../../code/logmonkey/">Log::Monkey</a>&nbsp;&nbsp;</b></td>
+    <td valign=top><code>perl</code> module which logs to syslog,
+    stderr, or a given file with optional timestamps and/or stack
+    trace information 
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b><a
+    href="./Log::Transcript.html">Log::Transcript</a>&nbsp;&nbsp;</b></td>
+    <td valign=top><code>perl</code> module to log data with log line
+    headers to stderr and to a session transcript with option to
+    email the session transcript
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>lsrm&nbsp;&nbsp;</b></td>
+    <td valign=top>Similar to "<code>rm -i</code>" but does an
+    "<code>ls -l</code>" file listing before asking for delete
+    confirmation
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>_lynx&nbsp;&nbsp;</b></td>
+    <td valign=top>Catenates stdin to a temporary file and invokes the
+    lynx world wide web browser on the temporary file
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>mklockdir&nbsp;&nbsp;</b></td>
+    <td valign=top>Given a directory to create, the number of attempts
+    to be made, and an interval to sleep between attempts, returns
+    whether the attempt to create the directory was successful.  Useful
+    in getting locks.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>mktmp.c&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>make temporary file name</i></b>") An
+    implementation similar to that of linux's
+    <code>mktemp(1)</code>.  In mine, you don't need to supply a
+    template.  You just get a six character string designed to make a
+    filename unique.  
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>muttuser&nbsp;&nbsp;</b></td>
+    <td valign=top>Converts lines containing an alias for an email
+    addressee, the addressee's full name, the addressee's email
+    address, and the addressee's email folder to <code>.muttrc</code>
+    text containing <code>mutt</code> alias, fcc-hook and save-hook
+    commands and prints them on stdout
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>mylocate, myupdatedb&nbsp;&nbsp;</b></td>
+    <td valign=top>Mimics gnu locate and updatedb; designed for
+    non-privileged users
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>no_comment&nbsp;&nbsp;</b></td>
+    <td valign=top>Strips comments (null lines or lines beginning with
+    optional whitespace and then the pound sign) from input
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>notify_by_email&nbsp;&nbsp;</b></td>
+    <td valign=top>Command line tool to send email using site specific
+    mail servers
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>nrcp, nrmv&nbsp;&nbsp;</b></td>
+    <td valign=top>Atomic ("no race") copy and move
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>older&nbsp;&nbsp;</b></td>
+    <td valign=top>Returns 0 if a file is older than a given
+    age in seconds.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>only_printable&nbsp;&nbsp;</b></td>
+    <td valign=top>Like <code>cat(1)</code> except that non-printable
+    ascii characters are not catenated to stdout.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>pfwdmail&nbsp;&nbsp;</b></td>
+    <td valign=top>Accepts email on stdin (from procmail) and forwards
+    selected SMTP headers to my cell phone if the sender is in a white
+    list
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>pingurl&nbsp;&nbsp;</b></td>
+    <td valign=top>Sends and logs an alert if it can't load a given URL
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>portowner&nbsp;&nbsp;</b></td>
+    <td valign=top>Logs and sends an alert if the process bound to a
+    particular port is not owned by a particular application
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>proc_cont_lines&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>process continuation lines</i></b>") Like
+    <code>cat(1)</code> except that all "\\\n" pairs (i.e., a
+    backslash followed by a newline) are deleted.  
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>process_shutdown_state&nbsp;&nbsp;</b></td>
+    <td valign=top>An <code>init.d/</code> script.  When run at
+    shutdown, turns off <code>chkconfig</code> flag indicating
+    ungraceful shutdown.  If shutdown is not graceful, then the
+    "shutdown_complaint" flag, whose steady state is on, is not
+    turned off.  When this script is run at startup, if the
+    shutdown_complaint flag is on, alerts sysadmins that the system
+    may not have been shut down gracefully.  
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>proclog&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>process log</i></b>") Rotates or zeroes out
+    a (log) file.  The chosen function is performed either
+    unconditionally, or based on filesize.  Rotation can be to any
+    desired directory.  The name of the rotated file may have an "o"
+    prepended to the original name or may consist of the original name
+    with a suffix indicating the date and time the file was rotated.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>prtacct&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>print account</i></b>") Formats and prints to
+    stdout a <code>cbb</code> (check book balancer) account file
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>psg&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>process grep</i></b>") Queries the process
+    table for a given regular expression
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>puncom&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>perl uncomment</i></b>") Uncomments
+    <code>perl</code>
+    scripts to stdout.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>purge_atsummary_backups&nbsp;&nbsp;</b></td>
+    <td valign=top>Purges at summary backups except for the most recent
+    (see also <b>atsummary</b>)
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>randomxsetroot&nbsp;&nbsp;</b></td>
+    <td valign=top>Changes the X11 root window color to a randomly
+    generated color
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>realpath&nbsp;&nbsp;</b></td>
+    <td valign=top>Resolves given paths to absolute paths.  That is,
+    paths which begin with '/' and contain no components which are
+    symbolic links or '.' or '..'.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>reminders&nbsp;&nbsp;</b></td>
+    <td valign=top>Sends email reminders depending on today's date
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>rockm3u&nbsp;&nbsp;</b></td>
+    <td valign=top>Selects random mp3 paths from a file tree and
+    prints a random m3u play list
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>rs&nbsp;&nbsp;</b></td>
+    <td valign=top>Utility that performs rsync backups.  Command line
+    menu allows user to choose pull or push, remote host, and remote
+    file tree.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>shadrpt&nbsp;&nbsp;</b></td>
+    <td valign=top>Parses a shadow file to determine information on
+    password expiration dates
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>showpathdef&nbsp;&nbsp;</b></td>
+    <td valign=top>Prints to stdout statements in shell startup files
+    containing path definitions
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>shufflemp3s&nbsp;&nbsp;</b></td>
+    <td valign=top>From a directory full of files each containing the
+    names of mp3 music files, prints to stdout a list of the contents of
+    these files where the files have been chosen in random order
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>snap&nbsp;&nbsp;</b></td>
+    <td valign=top>Makes timestamped snapshots of files, preserving
+    ownership (given sufficient privilege), mtimes, and permissions
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>tdist&nbsp;&nbsp;</b></td>
+    <td valign=top>Distributes files to a set of remote systems.  Which
+    set receives the files is dependent on <code>$0</code>, which,
+    using symbolic links, is one of several shell variable names,
+    each variable containing a different set of hosts
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>tlink&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>test link</i></b>") Uses <code>ping(8)</code>
+    to "test a link", i.e. to notify admins when host is not reachable
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>to, from&nbsp;&nbsp;</b></td>
+    <td valign=top>Programs that "harvest" and print <code>To:</code>
+    and <code>From:</code> email addresses from mbox style mail
+    folders
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>treeinfo&nbsp;&nbsp;</b></td>
+    <td valign=top>Formats directory tree information.  Output can be
+    used to compare file and directory attributes of entire directory
+    trees.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>treesync&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>tree synchronize</i></b>") Takes two
+    directories as arguments.  Synchronizes the directory
+    tree whose root node is the second argument with the tree whose
+    root node is the first argument.  That is, deletes anything in
+    the second tree not found in the first tree, and creates in the
+    second tree anything not there, but that is found in the first tree.
+    (This was written years ago before I discovered the joys of rsync.)
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>uniqstr&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>unique string</i></b>") Prints a string
+    designed to make a filename unique by its inclusion in the filename.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>vitalinfo&nbsp;&nbsp;</b></td>
+    <td valign=top>Prints to stdout a snapshot of selected system
+    statistics.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>xfe&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>xterm front end</i></b>") Enhanced front
+    end to <code>xterm(1)</code>.  Generates xterm windows with randomly
+    selected colors.  Color pairs can be selected from a file.  Or two
+    colors can be randomly chosen from showrgb(1) output.  Or two random
+    hex numbers representing rgb values can be generated.  Or one of
+    these methods can be randomly chosen.
+    <p>xfe is my perl rewrite of a shell script I wrote in, and
+    continued to develop after 1995.  The current version of xfe has
+    been "in development" since 2001.  It does what I need, so I haven't
+    finished it.  I'd like one day to release it.  Here is its current
+    usage statement:
+    <pre>
+Copyright (C) 2001 David Alban (extasia@extasia.org)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+usage: xfe [ options ]
+       xfe Invocation
+
+options:
+
+  -a,--attrfile [ Attrfile ]    Use randomly selected attributes from an
+                                attributes file, Attrfile if given, to
+                                determine colors.  The default attribute file
+                                is TBD.  The default method of determining
+                                colors is to generate random hex numbers as
+                                color values.
+
+  -A,--hex                      Use randomly generated six-digit hex numbers
+                                as values for colors.  If a contrast threshold
+                                value is specified (elsewhere), use the first
+                                set of generated hex color values that
+                                satisfies the contrast threshold value.
+                                Otherwise use the first set of hex color values
+                                generated.  This is the default method for
+                                determining colors.
+
+  -b,--bg,--background Color    Use Color as background color.  The default
+                                method of determining colors is to generate
+                                random hex numbers as color values.
+
+  -c,--cr,--cursor Color        Use Color as cursor color.  The default is to
+                                use the foreground color.
+
+  -C,--contrast ContrastThreshold
+                                Use ContrastThreshold as the minimum contrast
+                                threshold value between foreground and
+                                background colors.  The default minimum
+                                contrast threshold value is 0.  The use of this
+                                option never causes an error.  If it is not
+                                appropriate on the given command line, it is
+                                ignored.  ContrastThreshold must be a
+                                non-negative integer or real number.
+
+  -d,--debug [ DebugSpec ]      Turn on debug mode.  If DebugSpec is used,
+                                the characters contained in this string will
+                                govern which debug modes are selected.  If
+                                DebugSpec is not used, the default mode of
+                                debug information is shown.  The following
+                                characters in DebugSpec result in the
+                                following debug information being shown.
+
+                                  0 => show command lines as they are expanded,
+                                       colors selected.
+                                       This is the default debug mode.
+                                  # => general color selection info
+                                  $ => Show the values of relevant environment
+                                       variables at startup
+                                  * => expanded command lines
+                                  . => *all* debug info
+                                  @ => parsed command line info
+                                  a => attrfile related info
+                                  A => hex color generation info
+                                  b => bg/fg/cr manual color generation
+                                  C => contrast info
+                                  e => window command info
+                                  F => font info
+                                  g => geometry info
+                                  H => host command info
+                                  i => inline invocation info
+                                  m => meta color generation info
+                                  n => don't launch xterm window
+                                  r => rgbdb color generation info
+                                  R => show candidate rgbdb pairs
+                                  s => su command info
+                                  S => scroll bar info
+                                  t => title (including icon title) info
+                                  x => xterm args info
+
+                                DebugSpec may not contain whitespace.
+
+  -e,--execute Command [ ... ]  Execute Command with optional arguments.  This
+                                option must be last on the command line.  The
+                                default command is /bin/bash.
+
+  -f,--foreground,--fg Color    Use Color as the cursor color.  The default 
+                                method of determining colors is to generate
+                                random hex numbers as color values.
+
+  -F,--fn,--font Font           Use Font as the font.  The default font is
+                                TBD.
+
+  -g,--gm,--geometry Geometry   Use Geometry as the geometry.  The default
+                                geometry is 80x40.
+
+  -h,-?,--help                  List usage and exit with status indicating
+                                success.
+
+  -H,--host HostSpec            Connect to another host.  HostSpec determines
+                                how this is done.  HostSpec must be of one of
+                                the following forms:  cmd@user@host
+                                                      cmd@@host
+                                                      user@host
+                                                      host
+                                The default command is ssh.  The default user
+                                is the user invoking xfe.
+
+  -i,--inline InlineSpec        Expand InlineSpec into the command line where
+                                it appears.  All such expansions are
+                                preprocessed before command line processing.
+                                InlineSpec may specify the location of any
+                                legal xfe command line or portion thereof,
+                                except that nested --inline invocations are
+                                not currently supported.  
+
+                                If InlineSpec is the name of a defined
+                                environment variable then the value of the
+                                variable will be inlined.  Else if InlineSpec
+                                is the name of an existing file, the first
+                                line in the file is inlined.
+
+  -I,--icontitle Title          Use Title as the icon title.  The default icon
+                                title is the window title.
+
+  -m,--meta                     Randomly select a method to determine colors.
+                                That is, let xfe randomly decide which
+                                of the method options to use to determine the
+                                colors.  The default method of determining
+                                colors is to generate random hex numbers as
+                                color values.
+
+  -n,--no-window                Do not launch an xterm window.  This is useful
+                                for debugging/informational purposes.
+
+  -p,--plain,--failsafe         Cause xfe to use the xterm defaults for
+                                (i.e., cause xfe not to specify):
+                                     color selection
+                                     scroll bar
+                                     geometry
+                                     font
+                                     (TBD: others?)
+                                Title selection (and TBD: others) will still
+                                be done by xfe.  The default is for xfe to
+                                make all of the selections mentioned above.
+
+  -r,--rgbdb                    Use randomly selected colors from the rgb
+                                database as values for colors.  If a contrast
+                                threshold value is specified (elsewhere), use
+                                the first set of selected values that satisfies
+                                the contrast threshold value.  Otherwise use
+                                the first set of values selected.  The default
+                                method of determining colors is to generate
+                                random hex numbers as color values.
+
+  -s,--su [ - ] [ User ]        Switch user to User.  If the optional dash is
+                                supplied, it is passed on to su(1) as an
+                                argument.  The target user is User if given,
+                                root otherwise.  If the environment variable
+                                XFESUCMD is set, its value is passed to
+                                su(1)'s -c option.
+
+  -S,--summary                  List usage summary and exit successfully.
+
+  -t,--title Title              Set window title to Title.  Environment
+                                variable interpolation is performed and
+                                the following backslash escape sequences
+                                are supported:
+
+            Replace       With
+            ===========   ==================================================
+            \$            $
+            \\            \
+            \~            The current working directory or '~' if in $HOME/
+            \a            ("argv") the xfe command line (including $0)
+            \A            The final expanded command line (including $0)
+            \b            The background color
+            \c            The cursor color
+            \C            The actual contrast between the background and
+                          foreground colors (the null string if
+                          method = "attrfile")
+            \e            The basename of the window command followed by its
+                          arguments
+            \E            The window command followed by its arguments
+            \f            The foreground color
+            \h            The system hostname, up to the first '.'
+            \H            The system hostname
+            \u            The username of the current user
+            \w            The current working directory
+            \W            The basename of the current working directory
+
+
+  -v,--verbose [ Increment ]    Select verbose output level.  Each instance of
+                                this option increases the verbose level from
+                                an initial level of 0 (no verbose output, the
+                                default).  If Increment is used, the level is
+                                increased by that amount.  Otherwise it is
+                                increased by 1.  Increment must be a positive
+                                integer.  Examples:  "-v 4" and "-vv -v 2"
+                                would both result in a verbose level of 4.
+
+  -V,--version                  Print version information and exit with status
+                                indicating success.
+
+  -x,--xterm-args arg [ arg ... ] ;,--end
+                                Pass arguments verbatim to xterm(1).  The -x
+                                form of this option is bounded by a
+                                semi-colon.  The --xterm-args form is bounded
+                                by --end.  If this option is last on the
+                                command line, it is not necessary for the args
+                                to be bounded.  xfe does not check the option
+                                arguments to this option.  The user should be
+                                familiar with xterm(1) options and should
+                                exercise care in choosing them.  Note that if
+                                -e is used as an option argument to this
+                                option, then xfe's -e (--execute) option
+                                should not also be used.
+
+Options in the set:
+
+  { --attrfile, --background, --cursor, --foreground, --hex, --rgbdb, --meta }
+
+are color selection options because they determine the method of selecting
+colors.  They are incompatible with each other except for:
+
+  { --background, --cursor, --foreground }
+
+which may be used together.
+
+The following options are "command" options and may be used only one per
+command line:  { --execute, --host, --su }.
+
+The --plain option may not be used with any of the color selection options, or
+any of these options: { --font, --geometry }.
+
+Return codes:
+  TBD
+    </pre>
+  </tr>
+  <tr>
+    <td valign=top><b>yestlog&nbsp;&nbsp;</b></td>
+    <td valign=top>("<b><i>yesterday's log</i></b>") Prints log
+    entries from yesterday.
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>ymdhms&nbsp;&nbsp;</b></td>
+    <td valign=top>(<i>name derived from a</i>
+    <code>date(1)</code><i> format</i>) Prints the current date and
+    time in the format:<pre>
+    %Y&lt;D3&gt;%m&lt;D3&gt;%d&lt;D1&gt;%H&lt;D2&gt;%M&lt;D2&gt;%S</pre>
+    where:<pre>
+     %Y    is the four digit year
+     %m    is the two digit month
+     %d    is the two digit day
+     %H    is the two digit hour
+     %M    is the two digit minute
+     %S    is the two digit second</pre>
+     and &lt;D...&gt; are the delimiters, if any, given on the command
+     line:<pre>
+     &lt;D1&gt;  is $1
+     &lt;D2&gt;  is $2
+     &lt;D3&gt;  is $3</pre>
+    </td>
+  </tr>
+  <tr>
+    <td valign=top><b>zclean&nbsp;&nbsp;</b></td>
+    <td valign=top>Disk space management tool.  Compresses or deletes or
+    truncates files in given directories.
+    </td>
+  </tr>
+</table>
+
+<br>
+<hr>
+<font size=-2>
+Last modified: $Date: 2006/10/09 03:19:12 $
+</font>
+</body>
+</html>

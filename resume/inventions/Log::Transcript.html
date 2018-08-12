@@ -1,0 +1,465 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<! $Id: Log::Transcript.html,v 1.1 2006/03/06 02:16:50 alban Exp $ >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>&#76;og::Transcript - Log data with log line headers to stderr and to
+a session transcript with option to email the session transcript.</title>
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#package_variables">PACKAGE VARIABLES</a></li>
+	<li><a href="#log_line_headers">LOG LINE HEADERS</a></li>
+	<li><a href="#the_session_transcript">THE SESSION TRANSCRIPT</a></li>
+	<li><a href="#example_use_of_a_transcript">EXAMPLE USE OF A TRANSCRIPT</a></li>
+	<li><a href="#subroutines">SUBROUTINES</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>&#76;og::Transcript - Log data with log line headers to stderr and to
+a session transcript with option to email the session transcript.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  use &#76;og::Transcript;</pre>
+<pre>
+       # no default; undefined if not set by user; if not defined,
+       # transcript will not be sent
+  &#36;Log::Transcript::notify          = $string;</pre>
+<pre>
+       # defaults to the basename of $0
+  &#36;Log::Transcript::program         = $string;</pre>
+<pre>
+       # defaults to concatenation of:
+       #   . username of real uid of running process
+       #   . an at sign ('@')
+       #   . fully qualified domainname of current host
+  &#36;Log::Transcript::from            = $string;</pre>
+<p>Subroutines for logging</p>
+<pre>
+  logecho( LIST );</pre>
+<pre>
+  logechos( LIST );</pre>
+<pre>
+  logdie( LIST );</pre>
+<pre>
+  log_start_message();</pre>
+<pre>
+  send_session_transcript( force =&gt; SCALAR );
+  send_session_transcript();</pre>
+<p>Subroutines affecting state</p>
+<pre>
+       # one or more of these parameters may be given
+  set_state(
+             notify          =&gt; $string,
+             from            =&gt; $string,
+             program         =&gt; $string,
+             send_transcript =&gt; SCALAR,
+             logheaders      =&gt; $string,
+             mailhosts       =&gt; $string,
+           );</pre>
+<pre>
+  set_send( SCALAR );
+  set_send();</pre>
+<p>Utility subroutines</p>
+<pre>
+  $string = log_timestamp();</pre>
+<pre>
+  $string = loglinehdr();</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>&#76;og::Transcript is a collection of subroutines designed to log
+information to stderr and email the information to a set of
+user-specified email addresses.</p>
+<p>This module assists in logging three types of logged data: informational,
+advisory and urgent.  Informational data is logged to stderr. 
+Advisory data is logged to stderr and is also emailed to a set of
+addresses specified by the caller upon invocation of a subroutine
+that indicates the caller is ready to have it sent.  Urgent data is
+logged to stderr and immediately emailed to a set of caller-specified
+addresses.  When urgent data is logged, process execution is
+immediately halted, and the process exists with an error status.</p>
+<p>It is intended that a batch mode process using this package redirect
+its stderr to append to a file, in effect creating a running log
+file.  A process doing so can log as informational data any data of
+which a record should be kept, but data which is not required to be
+seen by a person in any timely manner.  The process can log as
+advisory data any data which a person should review in a timely
+manner, but data that should not stop the normal flow of execution of
+the process.  Finally, the process can log as urgent data any data
+which must halt execution and which a person must see in a timely
+manner.  No matter what the category logging, the data will become part
+of the log file (because of the redirection of stderr).  The log file
+is then a permanent record that can be used for debugging, statistics
+and other data collection, forensics, etc.</p>
+<p>Each line logged has a log line header, a string which is prepended
+to the text logged.  Included in this header is "logging metadata": 
+a timestamp, the name of the host, the name of the process supplying
+the logged text, and the process ID of the process supplying the
+logged text.  Batch mode processes using this module to append log
+files can be assured that logging metadata will accompany every line
+of logged text.</p>
+<p>These routines were originally written for the following scenario.  A
+cron job invokes a program, say "myprog", and redirects stdout and
+stderr to append to a file, say "cron.log".  Because logging is done
+with log line headers, the data lines logged by this module resemble
+lines in a system log.  For informational data, myprog will use
+<code>logecho()</code> to log the data.  For advisory data, myprog will use
+<code>logechos()</code> to log the advisory data, and <code>send_session_transcript()</code> to
+email all logged data.  For urgent data, and to halt process
+execution, myprog will use logdie(), which will log the urgent
+data and send all logged data.</p>
+<p>If urgent or advisory data is logged and a valid set of email
+recipients is specified, the entire body of logged data
+(informational, advisory, and urgent), called the session transcript,
+is emailed to the recipients in addition to having been written to
+stderr.  So, a cron job that has redirected stdout and stderr to
+append a "cron.log" file will collect all logged data from every
+invocation, and cron.log will become a persistent record of all
+logged events.</p>
+<p>It is possible to log advisory and urgent data without emailing the
+logged data.  To do this, the caller simply omits the step of
+indicating the set of recipient email addresses.</p>
+<p>Or, a process could determine whether it was in batch mode (i.e.,
+whether stdin was associated with a tty) and set the notification
+addresses if in batch mode and omit that step if in interactive mode.</p>
+<p>
+</p>
+<hr />
+<h1><a name="package_variables">PACKAGE VARIABLES</a></h1>
+<p><strong>&#36;Log::Transcript::hostid</strong></p>
+<p>The value of &#36;Log::Transcript::hostid will be identified in the
+session transcript preface as the hostid of the machine sending the
+transcript.</p>
+<p>Default value: the hostid of the current host</p>
+<p><strong>&#36;Log::Transcript::hostfqdn</strong></p>
+<p>The value of &#36;Log::Transcript::hostfqdn will be identified in
+the session transcript preface as the fully qualified host name
+of the machine sending the transcript.</p>
+<p>Default value: the fully qualified host name of the current host</p>
+<p><strong>&#36;Log::Transcript::from</strong></p>
+<p>The value of &#36;Log::Transcript::from will be used as the email
+address in the From: header in any transcript emailed.  This
+implements a Reply-To functionality of sorts.</p>
+<p>Default value: USER@[HOST.]DOMAIN, where USER is the username
+associated with the effective UID that owns the running process, and
+[HOST.]DOMAIN is the fully qualified [hostname.]domainname of the
+current host.</p>
+<p><strong>&#36;Log::Transcript::logheaders</strong></p>
+<p>The value of &#36;Log::Transcript::logheaders determines whether "long"
+or "short" log line headers are used.  Valid values are in { "long",
+"short" }.  Values can be assigned without regard to case sensitivity.</p>
+<p>Default value: "long"</p>
+<p><strong>&#36;Log::Transcript::mailheaders</strong></p>
+<p>The value of this variable is expected to be an ordered,
+comma-delimited list of mail hosts.  An SMTP connection is attempted
+in order, with each of the members of the list, stopping when a
+connection is established or the end of the list is reached.</p>
+<p>Default value:  a sensible default list.  To see it, execute:</p>
+<pre>
+  perldoc -m &#76;og::Transcript</pre>
+<p>and search for "$mailhosts".</p>
+<p>Recommend changing this only when the default list doesn't result in
+mail being delivered.</p>
+<p><strong>&#36;Log::Transcript::notify</strong></p>
+<p>The value of &#36;Log::Transcript::notify will be used as the To:
+header of the session transcript email.</p>
+<p>If this variable is not defined by the caller, no transcript will be
+mailed.  It's value can be set directly, or by calling set_state with
+the "notify" key and a string that evaluates to a valid email address or
+comma-delimited set thereof:</p>
+<pre>
+  set_state( notify =&gt; $string );</pre>
+<p>Default value: none.  It is undefined until given a value by the caller.</p>
+<p><strong>&#36;Log::Transcript::program</strong></p>
+<p>The value of &#36;Log::Transcript::program is taken to be a string
+representing the name of the calling program.  It will be used in
+each log line header.</p>
+<p>Default value:  the basename of $0</p>
+<p><strong>&#36;Log::Transcript::send_transcript</strong></p>
+<p>The value of &#36;Log::Transcript::send_transcript is taken to be
+a boolean that determines whether the session transcript is sent. 
+(See <a href="#the_session_transcript"><strong>THE SESSION
+TRANSCRIPT</strong></a> section for additional information.)</p>
+<p>The value of &#36;Log::Transcript::send_transcript can be set:</p>
+<ul>
+<li>
+By assigning a value directly
+<p></p>
+<li>
+By calling <code>set_send()</code> with a scalar that evaluates to true
+<p></p>
+<li>
+By calling <code>set_send()</code> with an empty parameter list
+<p></p>
+<li>
+By calling <code>set_state()</code> with the "send_transcript" key and a scalar
+that evaluates to true:
+<pre>
+  set_state( send_transcript =&gt; SCALAR );</pre>
+<p></p>
+<li>
+By calling <code>logechos()</code> or <code>logdie()</code>
+<p></p></ul>
+<p>Default value: false</p>
+<p><strong>@&#76;og::Transcript::session_transcript</strong></p>
+<p>This array is the session transcript.  That is, it contains all logged
+data.  As the purpose of this package is to manage the transcript, it is
+recommended that this variable is not directly modified without a
+sufficient understanding of this package.  But it can be modified
+directly, if needed.  Applicable quote from "Advanced Perl Programming":</p>
+<pre>
+  Perl doesn't have an infatuation with enforced privacy. It would
+  prefer that you stayed out of its living room because you weren't
+  invited, not because it has a shotgun.</pre>
+<p>
+</p>
+<hr />
+<h1><a name="log_line_headers">LOG LINE HEADERS</a></h1>
+<p>Log line headers are strings containing logging metadata.  They are
+prepended to each line of logged text.  There is a "long" form and a
+"short" form for these headers.  A long log line header includes the
+following:</p>
+<pre>
+  YYYY-mm-dd HH:MM:SS HOSTNAME PROGRAM_NAME[PROCESS_ID]</pre>
+<p>That is, it has a timestamp, a hostname (up to, but excluding the
+first dot), a program name (the value of
+<strong>&#36;Log::Transcript::program</strong>), and the process ID (pid) of the
+invoking program.</p>
+<p>A short log line header includes only:</p>
+<pre>
+  PROGRAM_NAME[PROCESS_ID]</pre>
+<p>By default, long headers are used.</p>
+<p>The shorter form can be selected globally by setting the variable
+<strong>&#36;Log::Transcript::logheaders</strong> to the (case-insensitive) string
+"short".  The short form may also be globally selected by calling
+<code>set_state()</code> with:</p>
+<pre>
+  logheaders =&gt; &quot;short&quot;</pre>
+<p>Regardless of the global setting in effect indicating the use of long
+or short log line headers, either form may be selected on a per call
+basis by giving <code>--long-hdrs</code> or <code>--short-hdrs</code> as the first
+argument to logecho(), logechos(), or logdie().</p>
+<p>
+</p>
+<hr />
+<h1><a name="the_session_transcript">THE SESSION TRANSCRIPT</a></h1>
+<p>The session transcript is a record of all data (informational,
+advisory, and urgent) logged during a program's run.  It is populated
+by calls to logecho(), logechos(), and logdie().</p>
+<p>The existence of a transcript does not necessarily mean that it will
+be emailed.  A transcript is emailed only if
+&#36;Log::Transcript::notify is defined and one of the following is true:</p>
+<ul>
+<li>
+<code>send_session_transcript()</code> is called and
+&#36;Log::Transcript::send_transcript is true
+<p></p>
+<li>
+<code>send_session_transcript()</code> is called with "force =&gt; SCALAR" such that
+SCALAR evaluates to true
+<p></p>
+<li>
+<code>logdie()</code> is called
+<p></p></ul>
+<p>See the discussion on the package variables
+<strong>&#36;Log::Transcript::notify</strong> and
+<strong>&#36;Log::Transcript::send_transcript</strong> for additional information.</p>
+<p>
+</p>
+<hr />
+<h1><a name="example_use_of_a_transcript">EXAMPLE USE OF A TRANSCRIPT</a></h1>
+<p>Example of using a transcript:</p>
+<pre>
+  #!/usr/bin/perl</pre>
+<pre>
+  use &#76;og::Transcript;</pre>
+<pre>
+       # supply program name, notify recipients, and from address
+  set_state( notify  =&gt; 'developers-list@foo.bar',
+             from    =&gt; 'developers-list@foo.bar' );</pre>
+<pre>
+  # alternatively:
+  #
+  #   &#36;Log::Transcript::notify  = 'developers-list@foo.bar';
+  #   &#36;Log::Transcript::from    = 'developers-list@foo.bar';</pre>
+<pre>
+  log_start_message();</pre>
+<pre>
+  @filelist = ... ;</pre>
+<pre>
+       # logecho() does not affect the value of
+       # &#36;Log::Transcript::send_transcript
+  logecho &quot;got filelist&quot;;</pre>
+<pre>
+  for &#36;file ( @filelist ) {
+    if ( &#36;file !~ /$some_regexp/ ) {</pre>
+<pre>
+           # logechos() sets &#36;Log::Transcript::send_transcript
+           # to true 
+      logechos &quot;&#36;file doesn't match $some_regexp&quot;;
+    }
+  }</pre>
+<pre>
+  logecho &quot;sending files&quot;;</pre>
+<pre>
+  for &#36;file ( @filelist ) {</pre>
+<pre>
+         # logdie causes us to die immediately.  A transcript will be
+         # sent if &#36;Log::Transcript::notify is defined
+    ... process &#36;file successfully ...
+      or logdie &quot;&#36;file: can't send: $!\n&quot;;</pre>
+<pre>
+    logecho &quot;&#36;file sent&quot;;
+  }</pre>
+<pre>
+       # &#36;Log::Transcript::notify was defined by the call to
+       # set_state(), so this invocation of send_session_transcript()
+       # will email a transcript if &#36;Log::Transcript::send_transcript
+       # is true.  In this example, that will have happened only if
+       # one of the names in the file list didn't match the regexp. 
+       # In that case, &#36;Log::Transcript::send_transcript will
+       # have been set to true by a call to logechos().  Otherwise, no
+       # transcript will be sent.  In any case, the data logged by
+       # logecho() will have been logged to stderr (or to wherever
+       # you've redirected stderr).  
+       #
+       # In general if your program does anything to make
+       # &#36;Log::Transcript::send_transcript true (except calling
+       # logdie() ), you will need a call to send_session_transcript().
+  send_session_transcript();</pre>
+<p>
+</p>
+<hr />
+<h1><a name="subroutines">SUBROUTINES</a></h1>
+<p><strong>SUBROUTINES FOR LOGGING</strong></p>
+<p><strong>logecho()</strong></p>
+<pre>
+  logecho( LIST );</pre>
+<p><code>logecho()</code> prints its arguments to stderr and appends its arguments to
+the session transcript.</p>
+<p>Its arguments are first concatenated and then split on newlines, to
+produce text lines to be logged.  Each resulting line is prefixed by
+a log line header and is printed to stderr and also appended to the
+session transcript.</p>
+<p>Note:  If you want to override the currently selected
+       log line header format on a per-call basis, use
+       either <code>--short-hdrs</code> or <code>--long-hdrs</code> as the
+       first argument to logecho().</p>
+<p><strong>logechos()</strong></p>
+<pre>
+  logechos( LIST );</pre>
+<p>"logechos" is mnemonic for "logecho set".  <code>logechos()</code> sets
+&#36;Log::Transcript::send_transcript to true and then calls
+<code>logecho()</code> with its arguments.</p>
+<p><strong>logdie()</strong></p>
+<pre>
+  logdie( LIST );</pre>
+<p><code>logdie()</code> sets &#36;Log::Transcript::send_transcript to true, calls
+<code>logecho()</code> with its arguments, calls <code>send_session_transcript()</code> if
+&#36;Log::Transcript::notify is defined, and causes the calling
+program to exit with a value of 255.</p>
+<p><strong>log_start_message()</strong></p>
+<p><code>log_start_message()</code> logs the string "&gt;&gt;&gt; started TIMESTAMP",
+where "TIMESTAMP" is the output of a call to log_timestamp().</p>
+<p><strong>send_session_transcript()</strong></p>
+<pre>
+  send_session_transcript();
+  send_session_transcript( force =&gt; SCALAR );</pre>
+<p><code>send_session_transcript()</code> is called to send (email) a transcript of
+all data which has been logged to that point.  So it is usually
+called just before normal termination of the calling program.</p>
+<p>If it decides to email the session transcript, it first prepends a
+preface containing useful information.</p>
+<p><code>send_session_transcript()</code> emails the session
+transcript if &#36;Log::Transcript::notify is defined
+and if at least one of the following is true:</p>
+<ul>
+<li>
+The value of &#36;Log::Transcript::send_transcript evaluates to true
+<p></p>
+<li>
+send_session_transcript was called with "force =&gt; SCALAR" and SCALAR
+evaluates to true
+<p></p></ul>
+<p>A transcript preface identifies the host on which the program was run,
+the file that was executed, the time the program was invoked, and the
+real and effective user and group ID's owning the running process.</p>
+<p>Typically, you want to call <code>send_session_transcript()</code> after normal
+processing has completed in your program.</p>
+<p>See <a href="#the_session_transcript"><strong>THE SESSION
+TRANSCRIPT</strong></a> section for additional information.</p> 
+<p><strong>SUBROUTINES AFFECTING STATE</strong></p>
+<p><strong>set_state()</strong></p>
+<pre>
+  set_state( 
+             notify          =&gt; $string,
+             from            =&gt; $string,
+             program         =&gt; $string,
+             send_transcript =&gt; SCALAR,
+             logheaders      =&gt; $string,
+             mailhosts       =&gt; $string,
+           );</pre>
+<p><code>set_state()</code> sets package variables used by this module.</p>
+<p>For each KEY and VALUE specified, VALUE will be used to set the
+appropriate &#36;Log::Transcript::KEY variable.</p>
+<p>At least one KEY and VALUE should be specified.</p>
+<p>See section <a href="#package_variables"><strong>PACKAGE
+VARIABLES</strong></a> for additional information.</p>
+<p><strong>set_send()</strong></p>
+<pre>
+  set_send();
+  set_send( SCALAR );</pre>
+<p><code>set_send()</code> sets the value of
+&#36;Log::Transcript::send_transcript.  If called
+without arguments or called with a true argument,
+&#36;Log::Transcript::send_transcript is set to true. 
+If called with a false argument,
+&#36;Log::Transcript::send_transcript is set to false.</p>
+<p><strong>UTILITY SUBROUTINES</strong></p>
+<p>Routines used internally that are exported in case they are also
+useful to the caller.</p>
+<p><strong>log_timestamp()</strong></p>
+<pre>
+  SCALAR = log_timestamp();</pre>
+<p><code>log_timestamp()</code> returns a timestamp of the form:</p>
+<pre>
+  YYYY-mm-dd HH:MM:SS</pre>
+<p><strong>loglinehdr()</strong></p>
+<pre>
+  SCALAR = loglinehdr();</pre>
+<p>If the lowercased value of &#36;Log::Transcript::logheaders equals
+"long", <code>loglinehdr()</code> returns a string (log line header) of the form:</p>
+<pre>
+  YYYY-mm-dd HH:MM:SS HOSTNAME PROGRAM_NAME[PROCESS_ID]</pre>
+<p>If the lowercased value of &#36;Log::Transcript::logheaders equals
+"short", <code>loglinehdr()</code> returns a string (log line header) of the form:</p>
+<pre>
+  PROGRAM_NAME[PROCESS_ID]</pre>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>David Alban
+
+</body>
+
+</html>
