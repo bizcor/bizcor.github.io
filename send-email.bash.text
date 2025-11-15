@@ -1,0 +1,155 @@
+#!/bin/bash
+
+### DON'T STORE AUTH VALUES IN GIT!  SUPPLY THEM WHEN INSTALLING.  INSTALL WITH vimdiff.
+### DON'T STORE AUTH VALUES IN GIT!  SUPPLY THEM WHEN INSTALLING.  INSTALL WITH vimdiff.
+### DON'T STORE AUTH VALUES IN GIT!  SUPPLY THEM WHEN INSTALLING.  INSTALL WITH vimdiff.
+### DON'T STORE AUTH VALUES IN GIT!  SUPPLY THEM WHEN INSTALLING.  INSTALL WITH vimdiff.
+### DON'T STORE AUTH VALUES IN GIT!  SUPPLY THEM WHEN INSTALLING.  INSTALL WITH vimdiff.
+
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+pgm=${0##*/}
+
+source $HOME/lib/sh/loggitlib.sh || {
+  echo 1>&2 "can't source loggitlib"
+  exit 1
+}
+
+cleanup () {
+  [[ -f $tmpfile ]] && rm -f $tmpfile
+  return 0
+}
+
+got_ok () {
+  # we want to see a line like this
+  #   250 Ok 01010188afff1c49-c1a261b8-dee0-490b-a323-3035466565fb-000000
+  egrep '250 Ok [0-9a-z]{16}-[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}-[0-9a-z]{6}' $tmpfile
+}
+
+print_usage () {
+  cat 1>&2 << __END_OF_USAGE__
+usage: $pgm -h|--help
+       $pgm [ options ] Subject MessageFile
+       $pgm [ options ] Subject fileDescriptor
+
+       Subject is a string.
+       MessageFile is a path to a text file containing the email body.
+       fileDescriptor is a descriptor created by process substitution.
+           example:  $pgm Subject <(echo null)
+           example:  $pgm Subject <(cat somefile)
+           example:  $pgm Subject <(ls)
+
+options:
+  -F --full-name FullName    Use FullName as the "full name" value in the "From:" field of the email.  The default is to use the short hostname with a double colon prepended.
+__END_OF_USAGE__
+}
+
+tmpfile=$(mktemp)
+
+trap cleanup 1 2 3 11 15 ERR EXIT
+
+if [[ "$1" = -h || "$1" = --help ]] ; then
+  print_usage
+  exit 0
+fi
+
+loggit starting
+
+if [[ $# -lt 2 || $# -gt 4 ]] ; then
+  print_usage
+  exit 1
+fi
+
+     # set default full name
+full_name=::$(hostname -s)
+[[ $full_name =~ ^::ip-172-31-18-110 ]] && full_name=::ec2_2014
+[[ $full_name =~ ^::ip-172-31-39-76 ]] && full_name=::cupcake
+
+if [[ "$1" = -F || "$1" = --full-name ]] ; then
+  shift
+  full_name="$1"
+  echo "$full_name" | fgrep -q "'" && {
+    echo 1>&2 "${0##*/}: FullName: $full_name ; cannot contain single quotes"
+    print_usage
+    exit 1
+  }
+  echo "$full_name" | fgrep -q '"' && {
+    echo 1>&2 "${0##*/}: FullName: $full_name ; cannot contain double quotes"
+    print_usage
+    exit 1
+  }
+  shift
+fi
+
+subject="$1"
+message_file="$2"
+
+if [[ $message_file != '-' && $message_file != /dev/fd/* && ! -f $message_file ]] ; then
+  loggit "message file => $message_file; does not exist or is not regular file"
+  exit 1
+fi
+
+sender=extasia@extasia.org
+recipient=extasia@gmail.com
+
+loggit "sender: '$sender'"
+loggit "recipient: '$recipient'"
+loggit "subject: '$subject'"
+
+from_spec="\"$full_name\" <$sender>"
+
+loggit "from_spec: '$from_spec'"
+
+     # try hostid, then ioreg, then give up
+hostid=$(hostid 2>/dev/null)
+[[ -z $hostid ]] &&
+  hostid=$(ioreg -rd1 -c IOPlatformExpertDevice 2>/dev/null | grep IOPlatformUUID 2>/dev/null | cut -f4 -d'"' 2>/dev/null)
+[[ -z $hostid ]] &&
+  hostid=UNKNOWN
+
+### GIVE THESE REAL VALUES ONLY WHEN INSTALLING; perhaps "install" with vimdiff
+### GIVE THESE REAL VALUES ONLY WHEN INSTALLING; perhaps "install" with vimdiff
+### GIVE THESE REAL VALUES ONLY WHEN INSTALLING; perhaps "install" with vimdiff
+### GIVE THESE REAL VALUES ONLY WHEN INSTALLING; perhaps "install" with vimdiff
+### GIVE THESE REAL VALUES ONLY WHEN INSTALLING; perhaps "install" with vimdiff
+unset auth1
+unset auth2
+
+### MAINTAIN A LACK OF SECRETS (AUTH STUFF, FOR EXAMPLE) IN THIS FILE
+# the auth variables above should be set ONLY WHEN THIS FILE IS RELEASED/DEPLOYED
+[[ -z $auth1 || -z $auth2 ]] && {
+  echo 1>&2 "${0##*/}: FATAL: at least one auth variable is not set"
+  exit 1
+}
+
+loggit "info: note: a period on a line ends the email message body, even if it's in stdin"
+loggit "reading message body from stdin..."
+(
+openssl s_client -crlf -quiet -starttls smtp -connect email-smtp.us-west-2.amazonaws.com:587 < <(
+  cat << _END_OF_BODY_
+EHLO example.com
+AUTH LOGIN
+$auth1
+$auth2
+MAIL FROM: $sender
+RCPT TO: $recipient
+DATA
+From: $from_spec
+To: $recipient
+Subject: $subject
+X-org-extasia-smtp-session-start: $(date '+%Y-%m-%d %H:%M:%S %z')
+X-org-extasia-hostid: $hostid
+
+$(cat $message_file)
+.
+QUIT
+_END_OF_BODY_
+)
+) 2>&1 | tee $tmpfile
+
+loggit "OK line in smtp session: $(got_ok)"
+loggit smtp_status: $?
+
+loggit exiting
+
+exit $smtp_status

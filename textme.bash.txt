@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export PATH=$HOME/Dropbox/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+subject='[missing message] [textme]'
+[[ -n "$1" ]] && subject="$1 [textme]"
+
+send-email "$subject" <(echo null)
+
+exit 0
